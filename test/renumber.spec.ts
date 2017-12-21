@@ -10,7 +10,7 @@ describe('renumber', () => {
 		expect(renumber(['a', 'b'])).to.be.an('array').that.is.empty;
 	});
 	it('should renumber', () => {
-		expect(renumber(['1-x', '2-a', '3-@'])).to.eql([{
+		expect(renumber(['1-x', '2-a', '3-@'])).to.deep.equal([{
 			oldFile: '3-@',
 			newFile: '030-@'
 		}, {
