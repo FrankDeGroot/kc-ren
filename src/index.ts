@@ -19,9 +19,11 @@ export function renumber(files: string[]): Rename[] {
 	var index = 1;
 	for (var file of files) {
 		const match = /([^-]+)-(.*)/.exec(file);
-		const newFile = '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2];
-		if (file != newFile) {
-			renFiles.push({ oldFile: file, newFile: newFile });
+		if (match) {
+			const newFile = '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2];
+			if (file != newFile) {
+				renFiles.push({ oldFile: file, newFile: newFile });
+			}
 		}
 	}
 	return renFiles.reverse();
