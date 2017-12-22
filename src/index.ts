@@ -6,11 +6,12 @@ interface Rename {
 	newFile: string
 }
 
-const dir = '../JAVA8/slides';
-const files = fs.readdirSync(dir);
-const renames = renumber(files);
-for(var rename of renames) {
-	fs.renameSync(path.join(dir, rename.oldFile), path.join(dir, rename.newFile));
+export function renumberDir(dir: string) {
+	const files = fs.readdirSync(dir);
+	const renames = renumber(files);
+	for(var rename of renames) {
+		fs.renameSync(path.join(dir, rename.oldFile), path.join(dir, rename.newFile));
+	}
 }
 
 export function renumber(files: string[]): Rename[] {
