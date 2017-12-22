@@ -1,6 +1,9 @@
 import { renumber } from '../src/index';
 
-import { expect } from 'chai';
+import { expect, use } from 'chai';
+import chaiThings = require('chai-things');
+
+use(chaiThings);
 
 describe('renumber', () => {
 	it('should return an empty list on no files', () => {
@@ -22,9 +25,16 @@ describe('renumber', () => {
 		}]);
 	});
 	it('should skip files that are not renamed', () => {
-		expect(renumber(['1-x', '020-a'])).to.eql([{
+		expect(renumber(['1-x', '020-a'])).to.deep.equal([{
 			oldFile: '1-x',
 			newFile: '010-x'
 		}]);
-	})
+	});
+	it('should prepend 0s with 10 files or more', () => {
+		var files: string[] = [];
+		for(var i = 1; i <= 10; i++) {
+			files.push(i.toString() + '-something');
+		}
+		expect(renumber(files)).to.include.something.that.deep.equals({oldFile: '1-something', newFile: '0010-something'});
+	});
 });
