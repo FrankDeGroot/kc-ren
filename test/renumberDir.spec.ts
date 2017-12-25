@@ -7,30 +7,53 @@ import * as rimraf from 'rimraf';
 import * as tmp from 'tmp';
 
 describe('renumberDir', () => {
-	it('should handle an empty directory', () => {
-		inTmpDir(renumberDir);
+	let tmpDir;
+	let tmpDirName;
+
+	beforeEach(() => {
+		tmpDir = tmp.dirSync();
+		tmpDirName = tmpDir.name; 
 	});
-	it('should rename the file', () => {
-		inTmpDir(dir => {
-			createFile(dir, '1-a');
-			renumberDir(dir);
-			const files = fs.readdirSync(dir);
-			expect(files).to.deep.equal(['010-a']);
+
+	afterEach(() => {
+		rimraf(tmpDirName + '/*', () => {
+			tmpDir.removeCallback();
 		});
+	});
+
+	it('should handle an empty directory', () => {
+		renumberDir(tmpDirName);
+	});
+
+	it('should rename the file', () => {
+		createFile(tmpDirName, '1-a');
+		renumberDir(tmpDirName);
+		const files = fs.readdirSync(tmpDirName);
+		expect(files).to.deep.equal(['010-a']);
+	});
+
+	it('should rename the directory', () => {
+		createDir(tmpDirName, '1-a');
+		renumberDir(tmpDirName);
+		const files = fs.readdirSync(tmpDirName);
+		expect(files).to.deep.equal(['010-a']);
+	});
+
+	it('should rename the files in a directory', () => {
+		createDir(tmpDirName, '1-a');
+		createFile(tmpDirName + '/1-a', '1-a');
+		renumberDir(tmpDirName);
+		const dirs = fs.readdirSync(tmpDirName);
+		expect(dirs).to.deep.equal(['010-a']);
+		const files = fs.readdirSync(tmpDirName + '/010-a');
+		expect(files).to.deep.equal(['010-a']);
 	});
 });
 
-function inTmpDir(doTest: (string) => void) {
-	const tmpDir = tmp.dirSync();
-	try {
-		doTest(tmpDir.name);
-	} finally {
-		rimraf(tmpDir.name, () => {
-			tmpDir.removeCallback();
-		});
-	}
-}
-
 function createFile(dir: string, name: string) {
 	fs.writeFileSync(path.join(dir, name), '');
+}
+
+function createDir(dir: string, name: string) {
+	fs.mkdirSync(path.join(dir, name));
 }

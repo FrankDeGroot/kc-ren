@@ -10,7 +10,12 @@ export function renumberDir(dir: string) {
 	const files = fs.readdirSync(dir);
 	const renames = renumber(files);
 	for(var rename of renames) {
-		fs.renameSync(path.join(dir, rename.oldFile), path.join(dir, rename.newFile));
+		const oldFile = path.join(dir, rename.oldFile);
+		const newFile = path.join(dir, rename.newFile);
+		fs.renameSync(oldFile, newFile);
+		if (fs.statSync(newFile).isDirectory()) {
+			renumberDir(newFile);
+		}
 	}
 }
 
