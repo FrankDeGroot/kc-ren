@@ -1,5 +1,7 @@
 .*
 *.js
+*.js.map
 *.log
+*.spec.d.ts
 !.gitignore
 node_modules

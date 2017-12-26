@@ -1,6 +1,17 @@
 {
 	"compilerOptions": {
 		"module": "commonjs",
-		"target": "es2017"
+		"target": "es2017",
+		"noImplicitAny": true,
+		"sourceMap": true,
+		"forceConsistentCasingInFileNames": true,
+		"strictNullChecks": true,
+		"noUnusedLocals": true,
+		"noImplicitReturns": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitThis": true,
+		"importHelpers": true,
+		"declaration": true
 	}
 }

@@ -7,8 +7,8 @@ import * as rimraf from 'rimraf';
 import * as tmp from 'tmp';
 
 describe('renumberDir', () => {
-	let tmpDir;
-	let tmpDirName;
+	let tmpDir: tmp.SynchrounousResult;
+	let tmpDirName: string;
 
 	beforeEach(() => {
 		tmpDir = tmp.dirSync();

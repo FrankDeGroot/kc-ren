@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-interface Rename {
+export interface Rename {
 	oldFile: string,
 	newFile: string
 }
