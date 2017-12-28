@@ -13,10 +13,8 @@ describe('renumberDir', () => {
     tmpDirName = tmp.dirSync().name;
   });
 
-  afterEach((cb) => {
-    rimraf(tmpDirName, () => {
-      cb();
-    });
+  afterEach(done => {
+    rimraf(tmpDirName, done);
   });
 
   it('should handle an empty directory', () => {
