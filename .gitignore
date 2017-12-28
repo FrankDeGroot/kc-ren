@@ -3,5 +3,6 @@
 *.js.map
 *.log
 *.spec.d.ts
+!.editorconfig
 !.gitignore
 node_modules

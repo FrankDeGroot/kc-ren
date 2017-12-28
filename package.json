@@ -1,4 +1,4 @@
-  {
+{
   "devDependencies": {
     "@types/chai": "^4.0.10",
     "@types/chai-things": "0.0.32",
@@ -12,13 +12,15 @@
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
     "tmp": "0.0.33",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.2"
   },
   "scripts": {
     "build": "tsc -p .",
     "clean": "rimraf src/**/*.js src/**/*.js.map test/**/*.js test/**/*.js.map test/**/*.d.ts",
+    "lint": "tslint -p .",
     "test": "mocha --recursive",
-    "verify": "run-s clean build test"
+    "verify": "run-s clean build lint test"
   },
   "dependencies": {}
 }
