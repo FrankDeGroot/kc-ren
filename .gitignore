@@ -3,6 +3,9 @@
 *.js.map
 *.log
 *.spec.d.ts
+!*.baseline.js
+!*.conf.js
 !.editorconfig
 !.gitignore
+reports
 node_modules
