@@ -15,7 +15,9 @@
     "stryker-api": "^0.12.0",
     "stryker-baseline-reporter": "^1.0.3",
     "stryker-html-reporter": "^0.11.4",
+    "stryker-javascript-mutator": "^0.3.1",
     "stryker-mocha-runner": "^0.10.2",
+    "stryker-typescript": "^0.8.1",
     "tmp": "0.0.33",
     "tslint": "^5.8.0",
     "typescript": "^2.6.2"
