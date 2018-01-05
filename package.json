@@ -1,4 +1,10 @@
 {
+  "name": "kc-ren",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "bin": {
+    "kc-ren": "bin/cli.js"
+  },
   "devDependencies": {
     "@types/chai": "^4.0.10",
     "@types/chai-things": "0.0.32",
@@ -24,11 +30,12 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "clean": "rimraf src/**/*.js src/**/*.js.map test/**/*.js test/**/*.js.map test/**/*.d.ts",
+    "clean": "rimraf bin/**/*.js bin/**/*.js.map bin/**/*.d.ts src/**/*.js src/**/*.js.map test/**/*.js test/**/*.js.map test/**/*.d.ts",
     "lint": "tslint -p .",
     "stryker": "stryker run stryker.conf.js",
     "test": "mocha --recursive",
-    "verify": "run-s clean build lint test"
+    "verify": "run-s clean build lint test",
+    "watch": "tsc -w -p ."
   },
   "dependencies": {}
 }

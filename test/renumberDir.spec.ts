@@ -35,6 +35,13 @@ describe('renumberDir', () => {
     expect(files).to.deep.equal(['010-a']);
   });
 
+  it('should skip hidden directories', () => {
+    createDir(tmpDirName, '.1-a');
+    renumberDir(tmpDirName);
+    const files = fs.readdirSync(tmpDirName);
+    expect(files).to.deep.equal(['.1-a']);
+  });
+
   it('should rename the files in a directory', () => {
     createDir(tmpDirName, '1-a');
     createFile(tmpDirName + '/1-a', '1-a');
@@ -42,6 +49,16 @@ describe('renumberDir', () => {
     const dirs = fs.readdirSync(tmpDirName);
     expect(dirs).to.deep.equal(['010-a']);
     const files = fs.readdirSync(tmpDirName + '/010-a');
+    expect(files).to.deep.equal(['010-a']);
+  });
+
+  it('should rename the files in an not-renamed directory', () => {
+    createDir(tmpDirName, 'a');
+    createFile(tmpDirName + '/a', '1-a');
+    renumberDir(tmpDirName);
+    const dirs = fs.readdirSync(tmpDirName);
+    expect(dirs).to.deep.equal(['a']);
+    const files = fs.readdirSync(tmpDirName + '/a');
     expect(files).to.deep.equal(['010-a']);
   });
 });
