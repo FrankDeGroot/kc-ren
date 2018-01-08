@@ -7,67 +7,59 @@ import * as rimraf from 'rimraf';
 import * as tmp from 'tmp';
 
 describe('renumberDir', () => {
-  let tmpDirName: string;
+  let tmpPath: string;
 
   beforeEach(() => {
-    tmpDirName = tmp.dirSync().name;
+    tmpPath = tmp.dirSync().name;
   });
 
   afterEach(done => {
-    rimraf(tmpDirName, done);
+    rimraf(tmpPath, done);
   });
 
   it('should handle an empty directory', () => {
-    renumberDir(tmpDirName);
+    renumberDir(tmpPath);
   });
 
   it('should rename the file', () => {
-    createFile(tmpDirName, '1-a');
-    renumberDir(tmpDirName);
-    const files = fs.readdirSync(tmpDirName);
-    expect(files).to.deep.equal(['010-a']);
+    createFile(tmpPath, '1-a');
+    renumberDir(tmpPath);
+    dirEquals(tmpPath, ['010-a']);
   });
 
   it('should rename the directory', () => {
-    createDir(tmpDirName, '1-a');
-    renumberDir(tmpDirName);
-    const files = fs.readdirSync(tmpDirName);
-    expect(files).to.deep.equal(['010-a']);
+    createDir(tmpPath, '1-a');
+    renumberDir(tmpPath);
+    dirEquals(tmpPath, ['010-a']);
   });
 
   it('should skip hidden directories', () => {
-    createDir(tmpDirName, '.1-a');
-    renumberDir(tmpDirName);
-    const files = fs.readdirSync(tmpDirName);
-    expect(files).to.deep.equal(['.1-a']);
+    createDir(tmpPath, '.1-a');
+    renumberDir(tmpPath);
+    dirEquals(tmpPath, ['.1-a']);
   });
 
   it('should skip hidden files', () => {
-    createFile(tmpDirName, '.1-a');
-    renumberDir(tmpDirName);
-    const files = fs.readdirSync(tmpDirName);
-    expect(files).to.deep.equal(['.1-a']);
+    createFile(tmpPath, '.1-a');
+    renumberDir(tmpPath);
+    dirEquals(tmpPath, ['.1-a']);
   });
 
   it('should rename the files in a directory', () => {
-    createDir(tmpDirName, '1-a');
-    createFile(path.join(tmpDirName, '1-a'), '1-a');
-    renumberDir(tmpDirName);
-    const dirs = fs.readdirSync(tmpDirName);
-    expect(dirs).to.deep.equal(['010-a']);
-    const files = fs.readdirSync(path.join(tmpDirName, '010-a'));
-    expect(files).to.deep.equal(['010-a']);
+    createDir(tmpPath, '1-a');
+    createFile(path.join(tmpPath, '1-a'), '1-a');
+    renumberDir(tmpPath);
+    dirEquals(tmpPath, ['010-a']);
+    dirEquals(path.join(tmpPath, '010-a'), ['010-a']);
   });
 
   it('should rename the files in an not-renamed directory', () => {
-    createDir(tmpDirName, 'a');
-    const subPath = path.join(tmpDirName, 'a');
+    createDir(tmpPath, 'a');
+    const subPath = path.join(tmpPath, 'a');
     createFile(subPath, '1-a');
-    renumberDir(tmpDirName);
-    const dirs = fs.readdirSync(tmpDirName);
-    expect(dirs).to.deep.equal(['a']);
-    const files = fs.readdirSync(subPath);
-    expect(files).to.deep.equal(['010-a']);
+    renumberDir(tmpPath);
+    dirEquals(tmpPath, ['a']);
+    dirEquals(subPath, ['010-a']);
   });
 });
 
@@ -77,4 +69,9 @@ function createFile(dir: string, name: string) {
 
 function createDir(dir: string, name: string) {
   fs.mkdirSync(path.join(dir, name));
+}
+
+function dirEquals(dir: string, expected: string[]) {
+  const files = fs.readdirSync(dir);
+  expect(files).to.deep.equal(expected);
 }
