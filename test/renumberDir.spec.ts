@@ -44,21 +44,22 @@ describe('renumberDir', () => {
 
   it('should rename the files in a directory', () => {
     createDir(tmpDirName, '1-a');
-    createFile(tmpDirName + '/1-a', '1-a');
+    createFile(path.join(tmpDirName, '1-a'), '1-a');
     renumberDir(tmpDirName);
     const dirs = fs.readdirSync(tmpDirName);
     expect(dirs).to.deep.equal(['010-a']);
-    const files = fs.readdirSync(tmpDirName + '/010-a');
+    const files = fs.readdirSync(path.join(tmpDirName, '010-a'));
     expect(files).to.deep.equal(['010-a']);
   });
 
   it('should rename the files in an not-renamed directory', () => {
     createDir(tmpDirName, 'a');
-    createFile(tmpDirName + '/a', '1-a');
+    const subPath = path.join(tmpDirName, 'a');
+    createFile(subPath, '1-a');
     renumberDir(tmpDirName);
     const dirs = fs.readdirSync(tmpDirName);
     expect(dirs).to.deep.equal(['a']);
-    const files = fs.readdirSync(tmpDirName + '/a');
+    const files = fs.readdirSync(subPath);
     expect(files).to.deep.equal(['010-a']);
   });
 });
