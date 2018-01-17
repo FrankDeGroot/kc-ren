@@ -1,21 +1,22 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { promisify } from 'util';
 
 export interface Rename {
   oldFile: string;
   newFile: string;
 }
 
-export function renumberDir(dir: string) {
-  const files = fs.readdirSync(dir).filter(file => !/^\./.test(file));
+export async function renumberDir(dir: string) {
+  const files = (await promisify(fs.readdir)(dir)).filter(file => !/^\./.test(file));
   const renames = renumber(files);
   for (let rename of renames) {
     const oldFile = path.join(dir, rename.oldFile);
     const newFile = path.join(dir, rename.newFile);
     if (oldFile !== newFile) {
-      fs.renameSync(oldFile, newFile);
+      await promisify(fs.rename)(oldFile, newFile);
     }
-    if (fs.statSync(newFile).isDirectory()) {
+    if ((await promisify(fs.stat)(newFile)).isDirectory()) {
       renumberDir(newFile);
     }
   }
