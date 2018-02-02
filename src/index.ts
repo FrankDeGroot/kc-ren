@@ -17,7 +17,7 @@ export async function renumberDir(dir: string) {
       await promisify(fs.rename)(oldFile, newFile);
     }
     if ((await promisify(fs.stat)(newFile)).isDirectory()) {
-      renumberDir(newFile);
+      await renumberDir(newFile);
     }
   }
 }
