@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "tsc -p .",
-    "clean": "rimraf bin/**/*.js bin/**/*.js.map bin/**/*.d.ts src/**/*.js src/**/*.js.map test/**/*.js test/**/*.js.map test/**/*.d.ts",
+    "clean": "rimraf bin/**/*.js bin/**/*.js.map bin/**/*.d.ts src/**/*.js src/**/*.js.map test/**/*.js test/**/*.js.map test/**/*.d.ts .stryker-tmp reports",
     "lint": "tslint -p .",
     "stryker": "stryker run stryker.conf.js",
     "test": "mocha --recursive",
