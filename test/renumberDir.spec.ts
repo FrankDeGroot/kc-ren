@@ -54,7 +54,7 @@ describe('renumberDir', async () => {
     await dirEquals(path.join(tmpPath, '010-a'), ['010-a']);
   });
 
-  it('should rename the files in an not-renamed directory', async () => {
+  it('should rename the files in a not-renamed directory', async () => {
     const subPath = path.join(tmpPath, 'a');
     await createDir(tmpPath, 'a');
     await createFile(subPath, '1-a');
@@ -62,10 +62,18 @@ describe('renumberDir', async () => {
     await dirEquals(tmpPath, ['a']);
     await dirEquals(subPath, ['010-a']);
   });
+
+  it('should update references in markdown files', async () => {
+    await createFile(tmpPath, '1-a', 'some /2-a some');
+    await createFile(tmpPath, '2-a');
+    await renumberDir(tmpPath);
+    await dirEquals(tmpPath, ['010-a', '020-a']);
+    await fileEquals(tmpPath, '010-a', 'some /020-a some');
+  });
 });
 
-async function createFile(dir: string, name: string) {
-  await promisify(fs.writeFile)(path.join(dir, name), '');
+async function createFile(dir: string, name: string, contents: string = '') {
+  await promisify(fs.writeFile)(path.join(dir, name), contents);
 }
 
 async function createDir(dir: string, name: string) {
@@ -75,4 +83,9 @@ async function createDir(dir: string, name: string) {
 async function dirEquals(dir: string, expected: string[]) {
   const files = await promisify(fs.readdir)(dir);
   expect(files).to.deep.equal(expected);
+}
+
+async function fileEquals(dir: string, file: string, expected: string) {
+  const actual = await promisify(fs.readFile)(path.join(dir, file), 'utf-8');
+  expect(actual).to.equal(expected);
 }
