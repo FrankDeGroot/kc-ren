@@ -70,6 +70,17 @@ describe('renumberDir', async () => {
     await dirEquals(tmpPath, ['010-a', '020-a']);
     await fileEquals(tmpPath, '010-a', 'some /020-a some');
   });
+
+  it('should update references in markdown files in renamed directory', async () => {
+    const oldSubPath = path.join(tmpPath, '1-a');
+    await createDir(tmpPath, '1-a');
+    await createFile(oldSubPath, '1-a', 'some 1-a/2-a some');
+    await createFile(oldSubPath, '2-a');
+    await renumberDir(tmpPath);
+    const newSubPath = path.join(tmpPath, '010-a');
+    await dirEquals(newSubPath, ['010-a', '020-a']);
+    await fileEquals(newSubPath, '010-a', 'some 010-a/020-a some');
+  });
 });
 
 async function createFile(dir: string, name: string, contents: string = '') {

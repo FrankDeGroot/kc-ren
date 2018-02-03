@@ -12,34 +12,34 @@ describe('renumber', () => {
 
   it('should disregard files without a number prefix', () => {
     expect(renumber(['a', 'b'])).to.deep.equal([{
-      oldFile: 'b',
-      newFile: 'b'
+      oldName: 'b',
+      newName: 'b'
     }, {
-      oldFile: 'a',
-      newFile: 'a'
+      oldName: 'a',
+      newName: 'a'
     }]);
   });
 
   it('should renumber', () => {
     expect(renumber(['1-x', '2-a', '3-@'])).to.deep.equal([{
-      oldFile: '3-@',
-      newFile: '030-@'
+      oldName: '3-@',
+      newName: '030-@'
     }, {
-      oldFile: '2-a',
-      newFile: '020-a'
+      oldName: '2-a',
+      newName: '020-a'
     }, {
-      oldFile: '1-x',
-      newFile: '010-x'
+      oldName: '1-x',
+      newName: '010-x'
     }]);
   });
 
   it('should include files that are not renamed', () => {
     expect(renumber(['1-x', '020-a'])).to.deep.equal([{
-      oldFile: '020-a',
-      newFile: '020-a'
+      oldName: '020-a',
+      newName: '020-a'
     }, {
-      oldFile: '1-x',
-      newFile: '010-x'
+      oldName: '1-x',
+      newName: '010-x'
     }]);
   });
 
@@ -48,6 +48,6 @@ describe('renumber', () => {
     for (let i = 1; i <= 10; i++) {
       files.push(i.toString() + '-something');
     }
-    expect(renumber(files)).to.include.something.that.deep.equals({ oldFile: '1-something', newFile: '0010-something' });
+    expect(renumber(files)).to.include.something.that.deep.equals({ oldName: '1-something', newName: '0010-something' });
   });
 });
