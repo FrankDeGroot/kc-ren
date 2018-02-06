@@ -15,41 +15,48 @@ export interface Rename {
 
 interface RefUpdate extends Rename {
   newPath: string;
+  newStat: fs.Stats;
 }
 
 export async function renumberDir(path: string) {
-  const renames: RefUpdate[] = [];
-  await renumberSubdir(renames, path, '');
-  await updateRefs(renames);
+  const refUpdates: RefUpdate[] = [];
+  await renumberSubdir(refUpdates, path, '');
+  await updateRefs(refUpdates);
 }
 
-async function renumberSubdir(renames: RefUpdate[], basePath: string, subPath: string) {
-  const names = (await readDir(path.join(basePath, subPath))).filter(file => !/^\./.test(file));
+async function renumberSubdir(refUpdates: RefUpdate[], basePath: string, subPath: string) {
+  const names = (await readDir(path.join(basePath, subPath))).filter(isVisible);
   for (const entry of renumber(names)) {
     const parentPath = path.join(basePath, subPath);
     const newPath = path.join(parentPath, entry.newName);
-    renames.push({
-      oldName: path.join(subPath, entry.oldName),
-      newName: path.join(subPath, entry.newName),
-      newPath: newPath
-    });
     if (entry.oldName !== entry.newName) {
       await rename(
         path.join(parentPath, entry.oldName),
         newPath);
     }
-    if ((await stat(newPath)).isDirectory()) {
-      await renumberSubdir(renames, basePath, entry.newName);
+    const newStat = await stat(newPath);
+    refUpdates.push({
+      oldName: path.join(subPath, entry.oldName),
+      newName: path.join(subPath, entry.newName),
+      newPath: newPath,
+      newStat: newStat
+    });
+    if (newStat.isDirectory()) {
+      await renumberSubdir(refUpdates, basePath, entry.newName);
     }
   }
 }
 
-async function updateRefs(renames: RefUpdate[]) {
-  for (const rename of renames) {
-    const newPath = rename.newPath;
-    if ((await stat(newPath)).isFile()) {
+function isVisible(name: string): boolean {
+  return !/^\./.test(name);
+}
+
+async function updateRefs(refUpdates: RefUpdate[]) {
+  for (const refUpdate of refUpdates) {
+    const newPath = refUpdate.newPath;
+    if (refUpdate.newStat.isFile()) {
       let content = await readFile(newPath, 'utf-8');
-      for (const entry of renames) {
+      for (const entry of refUpdates) {
         content = content.replace(entry.oldName, entry.newName);
       }
       await writeFile(newPath, content, 'utf-8');
