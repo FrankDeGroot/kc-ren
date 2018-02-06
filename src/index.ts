@@ -69,7 +69,7 @@ export function renumber(names: string[]): Rename[] {
   let index = 1;
   return names.map(entry => {
     const match = /([^-]+)-(.*)/.exec(entry);
-    const newFile = match ? '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2] : entry;
-    return { oldName: entry, newName: newFile };
+    const newEntry = match ? '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2] : entry;
+    return { oldName: entry, newName: newEntry };
   }).reverse();
 }
