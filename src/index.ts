@@ -20,8 +20,8 @@ export async function renumberDir(path: string) {
 }
 
 async function renumberSubdir(renames: Rename[], basePath: string, subPath: string) {
-  const files = (await readDir(path.join(basePath, subPath))).filter(file => !/^\./.test(file));
-  for (const entry of renumber(files)) {
+  const names = (await readDir(path.join(basePath, subPath))).filter(file => !/^\./.test(file));
+  for (const entry of renumber(names)) {
     renames.push({
       oldName: path.join(subPath, entry.oldName),
       newName: path.join(subPath, entry.newName)
@@ -54,12 +54,10 @@ async function updateRefs(renames: Rename[], basePath: string) {
 
 export function renumber(names: string[]): Rename[] {
   const count = names.length.toString().length;
-  const renames = [];
   let index = 1;
-  for (const entry of names) {
+  return names.map(entry => {
     const match = /([^-]+)-(.*)/.exec(entry);
     const newFile = match ? '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2] : entry;
-    renames.push({ oldName: entry, newName: newFile });
-  }
-  return renames.reverse();
+    return { oldName: entry, newName: newFile };
+  }).reverse();
 }

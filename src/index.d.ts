@@ -3,4 +3,4 @@ export interface Rename {
     newName: string;
 }
 export declare function renumberDir(path: string): Promise<void>;
-export declare function renumber(files: string[]): Rename[];
+export declare function renumber(names: string[]): Rename[];
