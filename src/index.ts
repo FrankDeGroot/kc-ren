@@ -9,56 +9,57 @@ const stat = promisify(fs.stat);
 const writeFile = promisify(fs.writeFile);
 
 export interface Rename {
-  oldFile: string;
-  newFile: string;
+  oldName: string;
+  newName: string;
 }
 
-export async function renumberDir(dir: string) {
-  const allRenames: Rename[] = [];
-  await renumberSubdir(allRenames, dir, dir);
-  await updateRefs(allRenames, dir);
+export async function renumberDir(path: string) {
+  const renames: Rename[] = [];
+  await renumberSubdir(renames, path, '');
+  await updateRefs(renames, path);
 }
 
-async function renumberSubdir(allRenames: Rename[], baseDir: string, dir: string) {
-  const files = (await readDir(dir)).filter(file => !/^\./.test(file));
-  const fileRenames = renumber(files);
-  for (const fileRename of fileRenames) {
-    const oldFile = path.join(dir, fileRename.oldFile);
-    const newFile = path.join(dir, fileRename.newFile);
-    allRenames.push({
-      oldFile: oldFile.substring(baseDir.length),
-      newFile: newFile.substring(baseDir.length)
+async function renumberSubdir(renames: Rename[], basePath: string, subPath: string) {
+  const files = (await readDir(path.join(basePath, subPath))).filter(file => !/^\./.test(file));
+  for (const entry of renumber(files)) {
+    renames.push({
+      oldName: path.join(subPath, entry.oldName),
+      newName: path.join(subPath, entry.newName)
     });
-    if (oldFile !== newFile) {
-      await rename(oldFile, newFile);
+    const parentPath = path.join(basePath, subPath);
+    const newPath = path.join(parentPath, entry.newName);
+    if (entry.oldName !== entry.newName) {
+      await rename(
+        path.join(parentPath, entry.oldName),
+        newPath);
     }
-    if ((await stat(newFile)).isDirectory()) {
-      await renumberSubdir(allRenames, baseDir, newFile);
+    if ((await stat(newPath)).isDirectory()) {
+      await renumberSubdir(renames, basePath, entry.newName);
     }
   }
 }
 
-async function updateRefs(allRenames: Rename[], baseDir: string) {
-  for (const rename of allRenames) {
-    const file = path.join(baseDir, rename.newFile);
+async function updateRefs(renames: Rename[], basePath: string) {
+  for (const rename of renames) {
+    const file = path.join(basePath, rename.newName);
     if ((await stat(file)).isFile()) {
       let content = await readFile(file, 'utf-8');
-      for (const replace of allRenames) {
-        content = content.replace(replace.oldFile, replace.newFile);
+      for (const entry of renames) {
+        content = content.replace(entry.oldName, entry.newName);
       }
       await writeFile(file, content, 'utf-8');
     }
   }
 }
 
-export function renumber(files: string[]): Rename[] {
-  const count = files.length.toString().length;
-  const renFiles = [];
+export function renumber(names: string[]): Rename[] {
+  const count = names.length.toString().length;
+  const renames = [];
   let index = 1;
-  for (const file of files) {
-    const match = /([^-]+)-(.*)/.exec(file);
-    const newFile = match ? '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2] : file;
-    renFiles.push({ oldFile: file, newFile: newFile });
+  for (const entry of names) {
+    const match = /([^-]+)-(.*)/.exec(entry);
+    const newFile = match ? '0' + (index++).toString().padStart(count, '0') + '0' + '-' + match[2] : entry;
+    renames.push({ oldName: entry, newName: newFile });
   }
-  return renFiles.reverse();
+  return renames.reverse();
 }
