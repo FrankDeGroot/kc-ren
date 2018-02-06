@@ -13,21 +13,26 @@ export interface Rename {
   newName: string;
 }
 
-export async function renumberDir(path: string) {
-  const renames: Rename[] = [];
-  await renumberSubdir(renames, path, '');
-  await updateRefs(renames, path);
+interface RefUpdate extends Rename {
+  newPath: string;
 }
 
-async function renumberSubdir(renames: Rename[], basePath: string, subPath: string) {
+export async function renumberDir(path: string) {
+  const renames: RefUpdate[] = [];
+  await renumberSubdir(renames, path, '');
+  await updateRefs(renames);
+}
+
+async function renumberSubdir(renames: RefUpdate[], basePath: string, subPath: string) {
   const names = (await readDir(path.join(basePath, subPath))).filter(file => !/^\./.test(file));
   for (const entry of renumber(names)) {
-    renames.push({
-      oldName: path.join(subPath, entry.oldName),
-      newName: path.join(subPath, entry.newName)
-    });
     const parentPath = path.join(basePath, subPath);
     const newPath = path.join(parentPath, entry.newName);
+    renames.push({
+      oldName: path.join(subPath, entry.oldName),
+      newName: path.join(subPath, entry.newName),
+      newPath: newPath
+    });
     if (entry.oldName !== entry.newName) {
       await rename(
         path.join(parentPath, entry.oldName),
@@ -39,15 +44,15 @@ async function renumberSubdir(renames: Rename[], basePath: string, subPath: stri
   }
 }
 
-async function updateRefs(renames: Rename[], basePath: string) {
+async function updateRefs(renames: RefUpdate[]) {
   for (const rename of renames) {
-    const file = path.join(basePath, rename.newName);
-    if ((await stat(file)).isFile()) {
-      let content = await readFile(file, 'utf-8');
+    const newPath = rename.newPath;
+    if ((await stat(newPath)).isFile()) {
+      let content = await readFile(newPath, 'utf-8');
       for (const entry of renames) {
         content = content.replace(entry.oldName, entry.newName);
       }
-      await writeFile(file, content, 'utf-8');
+      await writeFile(newPath, content, 'utf-8');
     }
   }
 }
