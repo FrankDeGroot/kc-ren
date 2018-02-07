@@ -1,7 +1,7 @@
 {
   "name": "kc-ren",
-  "version": "0.1",
-  "description": "Renumber files in a reveal-js presentation.",
+  "version": "0.0.1",
+  "description": "Renumber files in a reveal-js presentation",
   "main": "src/index.js",
   "types": "src/index.d.ts",
   "bin": {
