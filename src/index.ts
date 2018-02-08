@@ -25,7 +25,8 @@ export async function renumberDir(path: string) {
 }
 
 async function renumberSubdir(refUpdates: RefUpdate[], basePath: string, subPath: string) {
-  const names = (await readDir(path.join(basePath, subPath))).filter(isVisible);
+  const fullPath = path.join(basePath, subPath);
+  const names = (await readDir(fullPath)).filter(isVisible);
   for (const entry of renumber(names)) {
     const parentPath = path.join(basePath, subPath);
     const newPath = path.join(parentPath, entry.newName);
@@ -42,7 +43,7 @@ async function renumberSubdir(refUpdates: RefUpdate[], basePath: string, subPath
       newStat: newStat
     });
     if (newStat.isDirectory()) {
-      await renumberSubdir(refUpdates, basePath, entry.newName);
+      await renumberSubdir(refUpdates, fullPath, entry.newName);
     }
   }
 }
@@ -54,7 +55,7 @@ function isVisible(name: string): boolean {
 async function updateRefs(refUpdates: RefUpdate[]) {
   for (const refUpdate of refUpdates) {
     const newPath = refUpdate.newPath;
-    if (refUpdate.newStat.isFile()) {
+    if (refUpdate.newStat.isFile() && refUpdate.newName.toLowerCase().endsWith('.md')) {
       let content = await readFile(newPath, 'utf-8');
       for (const entry of refUpdates) {
         content = content.replace(entry.oldName, entry.newName);
