@@ -16,7 +16,7 @@
     "@types/tmp": "0.0.33",
     "chai": "^4.1.2",
     "chai-things": "^0.2.0",
-    "mocha": "^4.0.1",
+    "mocha": "^10.2.0",
     "npm-run-all": "^4.1.2",
     "rimraf": "^2.6.2",
     "stryker": "^0.17.0",
