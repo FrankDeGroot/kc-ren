@@ -8,27 +8,27 @@
     "kc-ren": "bin/cli.js"
   },
   "devDependencies": {
-    "@types/chai": "^4.0.10",
-    "@types/chai-things": "0.0.32",
-    "@types/mocha": "^2.2.44",
-    "@types/node": "^8.5.1",
-    "@types/rimraf": "^2.0.2",
-    "@types/tmp": "0.0.33",
-    "chai": "^4.1.2",
-    "chai-things": "^0.2.0",
-    "mocha": "^10.2.0",
-    "npm-run-all": "^4.1.2",
-    "rimraf": "^2.6.2",
-    "stryker": "^0.24.2",
-    "stryker-api": "^0.12.0",
-    "stryker-baseline-reporter": "^1.0.3",
-    "stryker-html-reporter": "^0.11.4",
-    "stryker-javascript-mutator": "^0.14.1",
-    "stryker-mocha-runner": "^0.10.2",
-    "stryker-typescript": "^0.8.1",
-    "tmp": "0.0.33",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.2"
+    "@types/chai": "*",
+    "@types/chai-things": "*",
+    "@types/mocha": "*",
+    "@types/node": "*",
+    "@types/rimraf": "*",
+    "@types/tmp": "*",
+    "chai": "*",
+    "chai-things": "*",
+    "mocha": "*",
+    "npm-run-all": "*",
+    "rimraf": "*",
+    "stryker": "*",
+    "stryker-api": "*",
+    "stryker-baseline-reporter": "*",
+    "stryker-html-reporter": "*",
+    "stryker-javascript-mutator": "*",
+    "stryker-mocha-runner": "*",
+    "stryker-typescript": "*",
+    "tmp": "*",
+    "eslint": "*",
+    "typescript": "*"
   },
   "scripts": {
     "build": "tsc -p .",
@@ -38,6 +38,5 @@
     "test": "mocha --recursive",
     "verify": "run-s clean build lint test",
     "watch": "tsc -w -p ."
-  },
-  "dependencies": {}
+  }
 }
