@@ -1,12 +1,6 @@
 .*
-*.js
-*.js.map
-*.log
-*.spec.d.ts
-!*.baseline.js
-!*.conf.js
 !.editorconfig
 !.gitignore
-reports
+bun.lockb
 node_modules
 package-lock.json

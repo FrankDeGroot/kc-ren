@@ -2,41 +2,13 @@
   "name": "kc-ren",
   "version": "0.0.1",
   "description": "Renumber files in a reveal-js presentation",
-  "main": "src/index.js",
-  "types": "src/index.d.ts",
-  "bin": {
-    "kc-ren": "bin/cli.js"
-  },
+  "dependencies": {},
+  "module": "index.ts",
+  "type": "module",
   "devDependencies": {
-    "@types/chai": "*",
-    "@types/chai-things": "*",
-    "@types/mocha": "*",
-    "@types/node": "*",
-    "@types/rimraf": "*",
-    "@types/tmp": "*",
-    "chai": "*",
-    "chai-things": "*",
-    "mocha": "*",
-    "npm-run-all": "*",
-    "rimraf": "*",
-    "stryker": "*",
-    "stryker-api": "*",
-    "stryker-baseline-reporter": "*",
-    "stryker-html-reporter": "*",
-    "stryker-javascript-mutator": "*",
-    "stryker-mocha-runner": "*",
-    "stryker-typescript": "*",
-    "tmp": "*",
-    "eslint": "*",
-    "typescript": "*"
+    "@types/bun": "latest"
   },
-  "scripts": {
-    "build": "tsc -p .",
-    "clean": "rimraf bin/**/*.js bin/**/*.js.map bin/**/*.d.ts src/**/*.js src/**/*.js.map test/**/*.js test/**/*.js.map test/**/*.d.ts .stryker-tmp reports",
-    "lint": "tslint -p .",
-    "stryker": "stryker run stryker.conf.js",
-    "test": "mocha --recursive",
-    "verify": "run-s clean build lint test",
-    "watch": "tsc -w -p ."
+  "peerDependencies": {
+    "typescript": "^5.0.0"
   }
 }
