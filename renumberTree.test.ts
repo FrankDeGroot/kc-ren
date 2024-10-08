@@ -1,8 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
-import { $ } from 'bun'
 import { renumberTree } from './renumberTree'
 
-import { readdir, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { readdir, mkdir, mkdtemp, rmdir, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -14,7 +13,7 @@ describe('renumberDir', async () => {
   })
 
   afterEach(async () => {
-    await $`rm -rf ${tmpPath}`
+    await rmdir(tmpPath, { recursive: true })
   })
 
   test('should handle an empty directory', async () => {
